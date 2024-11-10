@@ -58,6 +58,7 @@
     "@swc/helpers": "~0.5.11",
     "@types/jest": "^29.5.12",
     "@types/node": "18.16.9",
+    "@types/ws": "^8.5.13",
     "@typescript-eslint/utils": "^8.0.0",
     "angular-eslint": "^18.3.0",
     "eslint": "^9.8.0",
