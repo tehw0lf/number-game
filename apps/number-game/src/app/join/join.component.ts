@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SessionService } from '../services/session.service';
@@ -10,6 +16,7 @@ import { SessionService } from '../services/session.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './join.component.html',
   styleUrl: './join.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JoinComponent {
   name: WritableSignal<string> = signal('');

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Player } from '@number-game/core';
 
 import { SessionService } from '../services/session.service';
@@ -11,13 +11,14 @@ import { StateService } from '../services/state.service';
   imports: [CommonModule],
   templateUrl: './result.component.html',
   styleUrl: './result.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResultComponent {
   public stateService: StateService = inject(StateService);
   private sessionService: SessionService = inject(SessionService);
 
   hasGuessed(player: Player): boolean {
-    if (player.guess >= 0 || player.guess === undefined) {
+    if (player.guess === undefined || player.guess >= 0) {
       return true;
     }
     return false;
