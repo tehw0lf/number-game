@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment, SessionUser } from '@number-game/core';
+import { environment } from '@number-game/core';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
@@ -33,15 +33,10 @@ export class SessionService {
   handleIncomingData(eventType: string, serverState: any) {
     switch (eventType) {
       case 'join':
-        runStoreAction('user', StoreActions.Update, {
-          payload: {
-            data: {
-              name: serverState.name,
-              pic: serverState.pic,
-            },
-          },
+        this.stateService.userInfo.set({
+          name: serverState.name,
+          pic: serverState.pic,
         });
-
         this.stateService.sessionUser.set({
           uuid: serverState.uuid,
           sessionID: serverState.sessionID,
@@ -51,20 +46,12 @@ export class SessionService {
 
       case 'restart':
         serverState.userGuess = -1;
-        runStoreAction('session', StoreActions.Update, {
-          payload: {
-            data: serverState,
-          },
-        });
+        this.stateService.session.set(serverState);
         this.router.navigate(['home']);
         break;
 
       case 'running':
-        runStoreAction('session', StoreActions.Update, {
-          payload: {
-            data: serverState,
-          },
-        });
+        this.stateService.session.set(serverState);
         break;
 
       default:
@@ -82,7 +69,7 @@ export class SessionService {
 
   joinSession(name: string, pic: string, sessionID: string): void {
     this.closeObservable$.subscribe(() => {
-      this.sessionStore.reset();
+      this.stateService.resetSession();
     });
     this.subject$.next({
       event: 'joinSession',
@@ -96,33 +83,25 @@ export class SessionService {
   }
 
   sendGuess(guess: number): void {
-    this.sessionQuery.user$.subscribe((user: SessionUser) => {
-      this.subject$.next({
-        event: 'guess',
-        data: {
-          uuid: user.uuid,
-          sessionID: user.sessionID,
-          guess,
-        },
-      });
-    });
-    runStoreAction('session', StoreActions.Update, {
-      payload: {
-        data: { userGuess: guess },
+    this.subject$.next({
+      event: 'guess',
+      data: {
+        uuid: this.stateService.sessionUser()?.uuid,
+        sessionID: this.stateService.sessionUser()?.sessionID,
+        guess,
       },
     });
+    this.stateService.userGuess.set(guess);
     this.router.navigate(['result']);
   }
 
   newRound(): void {
-    this.sessionQuery.user$.subscribe((user: SessionUser) => {
-      this.subject$.next({
-        event: 'newRound',
-        data: {
-          uuid: user.uuid,
-          sessionID: user.sessionID,
-        },
-      });
+    this.subject$.next({
+      event: 'newRound',
+      data: {
+        uuid: this.stateService.sessionUser()?.uuid,
+        sessionID: this.stateService.sessionUser()?.sessionID,
+      },
     });
   }
 }
