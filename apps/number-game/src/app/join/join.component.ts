@@ -3,7 +3,6 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SessionService } from '../services/session.service';
-import { StateService } from '../services/state.service';
 
 @Component({
   selector: 'app-join',
@@ -16,7 +15,6 @@ export class JoinComponent {
   name: WritableSignal<string> = signal('');
   sessionID: WritableSignal<string> = signal('');
 
-  public stateService: StateService = inject(StateService);
   private sessionService: SessionService = inject(SessionService);
 
   joinSession(): void {
