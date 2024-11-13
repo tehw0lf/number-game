@@ -14,7 +14,7 @@ export class StateService {
   sessionUser: WritableSignal<SessionUser | null> = signal(null);
   players: WritableSignal<Player[]> = signal([]);
   userInfo: WritableSignal<UserInfo | null> = signal(null);
-  userGuess: WritableSignal<number> = signal(-1);
+  userGuess: WritableSignal<number | undefined> = signal(-1);
   session: WritableSignal<any | null> = signal(null);
   winningNumber: WritableSignal<number> = signal(-1);
 
@@ -49,7 +49,7 @@ export class StateService {
   canVisitResult = computed(() =>
     this.sessionUser()?.sessionID !== '' &&
     this.sessionUser()?.uuid !== '' &&
-    this.userGuess() >= 0
+    this.userGuess() !== -1
       ? true
       : false
   );

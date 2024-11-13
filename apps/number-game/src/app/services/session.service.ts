@@ -81,7 +81,7 @@ export class SessionService {
     });
   }
 
-  sendGuess(guess: number): void {
+  sendGuess(guess?: number): void {
     this.subject$.next({
       event: 'guess',
       data: {
