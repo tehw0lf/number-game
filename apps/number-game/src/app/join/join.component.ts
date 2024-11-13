@@ -23,6 +23,6 @@ export class JoinComponent {
     if (!this.name()) {
       this.name.set(`Guest${Math.floor(Math.random() * 100000)}`);
     }
-    this.sessionService.joinSession(this.name(), 'myPicture', this.sessionID());
+    this.sessionService.joinSession(this.name(), this.sessionID());
   }
 }
