@@ -67,7 +67,7 @@ export class SessionService {
     this.router.navigate(['join']);
   }
 
-  joinSession(name: string, pic: string, sessionID: string): void {
+  joinSession(name: string, sessionID: string): void {
     this.closeObservable$.subscribe(() => {
       this.stateService.resetSession();
     });
@@ -77,7 +77,6 @@ export class SessionService {
         uuid: '',
         sessionID,
         name,
-        pic,
       },
     });
   }
