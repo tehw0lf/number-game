@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { SessionService } from '../services/session.service';
 import { JoinComponent } from './join.component';
 
 const mockSessionService = {
@@ -13,6 +14,7 @@ describe('JoinComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [JoinComponent],
+      providers: [{ provide: SessionService, useValue: mockSessionService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(JoinComponent);
@@ -23,23 +25,15 @@ describe('JoinComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  /*
-  it("should join a session without a set user name", () => {
+
+  it('should join a session without a set user name', () => {
     component.joinSession();
     expect(mockSessionService.joinSession).toHaveBeenCalled();
   });
 
-  it("should join a session with a set user name", () => {
-    runStoreAction("user", StoreActions.Update, {
-      payload: {
-        data: {
-          name: "name",
-          pic: "pic",
-        },
-      },
-    });
+  it('should join a session with a set user name', () => {
+    component.name.set('user');
     component.joinSession();
     expect(mockSessionService.joinSession).toHaveBeenCalled();
   });
-  */
 });

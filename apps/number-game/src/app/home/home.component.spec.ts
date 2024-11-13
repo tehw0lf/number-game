@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Player } from '@number-game/core';
 
 import { HomeComponent } from './home.component';
 
@@ -8,7 +9,7 @@ const mockSessionService = {
   sendGuess: jest.fn(),
 };
 
-const mockPlayer = {
+const mockPlayer: Player = {
   uuid: '',
   name: '',
   pic: '',
@@ -33,7 +34,7 @@ describe('HomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  /*
+
   it('should return true if a guess is undefined, aka the player has chosen a number', () => {
     mockPlayer.guess = undefined;
     expect(component.hasGuessed(mockPlayer)).toBeTruthy();
@@ -55,22 +56,22 @@ describe('HomeComponent', () => {
   });
 
   it('should send a guess if one is set and it is greater than 0', () => {
-    component.guess = 1;
+    component.guess.set(1);
     component.sendGuess();
     expect(mockSessionService.sendGuess).toHaveBeenCalled();
   });
 
   it('should not send a guess if one is set and it is 0', () => {
     const calls = mockSessionService.sendGuess.mock.calls.length;
-    component.guess = 0;
+    component.guess.set(0);
     component.sendGuess();
     expect(mockSessionService.sendGuess).toHaveBeenCalledTimes(calls);
   });
 
   it('should not send a guess if none is set', () => {
     const calls = mockSessionService.sendGuess.mock.calls.length;
-    component.guess = undefined;
+    component.guess.set(undefined);
     component.sendGuess();
     expect(mockSessionService.sendGuess).toHaveBeenCalledTimes(calls);
-  });*/
+  });
 });

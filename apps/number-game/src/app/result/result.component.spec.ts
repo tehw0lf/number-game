@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Player } from '@number-game/core';
 
 import { ResultComponent } from './result.component';
 
@@ -7,7 +8,7 @@ const mockSessionService = {
   leaveSession: jest.fn(),
 };
 
-const mockPlayer = {
+const mockPlayer: Player = {
   uuid: '',
   name: '',
   pic: '',
@@ -32,7 +33,7 @@ describe('ResultComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  /*
+
   it('should return true if a guess is undefined, aka the player has chosen a number', () => {
     mockPlayer.guess = undefined;
     expect(component.hasGuessed(mockPlayer)).toBeTruthy();
@@ -57,5 +58,4 @@ describe('ResultComponent', () => {
     component.leaveSession();
     expect(mockSessionService.leaveSession).toHaveBeenCalled();
   });
-  */
 });
