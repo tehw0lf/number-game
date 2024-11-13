@@ -2,6 +2,6 @@ export interface Player {
   uuid: string;
   name: string;
   pic: string;
-  guess: number;
+  guess?: number;
   won: boolean;
 }
