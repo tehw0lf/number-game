@@ -154,7 +154,6 @@ describe('StateService', () => {
       { uuid: '123', name: '', pic: '', guess: 0, won: false },
     ]);
     service.userGuess.set(1);
-    service.session.set({ data: 'any' });
     service.winningNumber.set(1);
 
     service.resetSession();
@@ -162,7 +161,6 @@ describe('StateService', () => {
     expect(service.sessionUser()).toBeNull();
     expect(service.players()).toEqual([]);
     expect(service.userGuess()).toEqual(-1);
-    expect(service.session()).toBeNull();
     expect(service.winningNumber()).toEqual(-1);
   });
 
