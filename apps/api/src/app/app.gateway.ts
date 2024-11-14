@@ -9,6 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { environment, Player } from '@number-game/core';
 import generateAvatar from 'github-like-avatar-generator';
+import { WebSocket } from 'ws';
 
 const connectedClients = new Map<
   string,
