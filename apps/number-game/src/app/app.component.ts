@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
 
 import { SessionService } from './services/session.service';
 
@@ -13,9 +12,7 @@ import { SessionService } from './services/session.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  private sessionService: SessionService = inject(SessionService);
-
-  init(): Observable<any> {
-    return this.sessionService.initializeConnection();
+  constructor(private sessionService: SessionService) {
+    this.sessionService.initializeConnection();
   }
 }

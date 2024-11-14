@@ -22,12 +22,15 @@ export class SessionService {
 
   closeObservable$: Observable<any> = this.closeSubject$.asObservable();
 
-  initializeConnection(): Observable<any> {
-    return this.subject$.asObservable().pipe(
-      tap((data: { eventType: string; serverState: any }) => {
-        this.handleIncomingData(data.eventType, data.serverState);
-      })
-    );
+  initializeConnection(): void {
+    this.subject$
+      .asObservable()
+      .pipe(
+        tap((data: { eventType: string; serverState: any }) => {
+          this.handleIncomingData(data.eventType, data.serverState);
+        })
+      )
+      .subscribe();
   }
 
   handleIncomingData(eventType: string, serverState: any) {
@@ -45,13 +48,15 @@ export class SessionService {
         break;
 
       case 'restart':
-        serverState.userGuess = -1;
-        this.stateService.session.set(serverState);
+        this.stateService.userGuess.set(-1);
+        this.stateService.players.set(serverState.players);
+        this.stateService.winningNumber.set(serverState.winningNumber);
         this.router.navigate(['home']);
         break;
 
       case 'running':
-        this.stateService.session.set(serverState);
+        this.stateService.players.set(serverState.players);
+        this.stateService.winningNumber.set(serverState.winningNumber);
         break;
 
       default:
