@@ -15,7 +15,6 @@ export class StateService {
   players: WritableSignal<Player[]> = signal([]);
   userInfo: WritableSignal<UserInfo | null> = signal(null);
   userGuess: WritableSignal<number | undefined> = signal(-1);
-  session: WritableSignal<any | null> = signal(null);
   winningNumber: WritableSignal<number> = signal(-1);
 
   winners: Signal<Player[]> = computed(() =>
@@ -58,7 +57,6 @@ export class StateService {
     this.sessionUser.set(null);
     this.players.set([]);
     this.userGuess.set(-1);
-    this.session.set(null);
     this.winningNumber.set(-1);
   }
 
