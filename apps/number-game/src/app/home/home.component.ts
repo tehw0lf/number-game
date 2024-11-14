@@ -42,7 +42,7 @@ export class HomeComponent {
       this.sessionService.sendGuess(this.guess());
       this.guess.set(-1);
     } else {
-      console.log('Please enter a number first, currently it is', this.guess);
+      console.error('Please enter a number first, currently it is', this.guess);
     }
   }
 }
