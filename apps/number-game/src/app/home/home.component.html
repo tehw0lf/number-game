@@ -1,0 +1,46 @@
+<h1 [title]="'Number Game'"></h1>
+
+<div>
+  <div class="p-20">
+    Name: {{ stateService.userInfo()?.name }} (picture:
+    {{ stateService.userInfo()?.pic }})
+  </div>
+  <div class="p-20">SessionID: {{ stateService.sessionUser()?.sessionID }}</div>
+  <div class="p-20">
+    Guess the number (or set it if you are the first to submit):
+    <p>
+      <input
+        type="text"
+        placeholder="3"
+        [(ngModel)]="guess"
+        (keyup.enter)="sendGuess()"
+      />
+    </p>
+    <p>
+      <button (click)="sendGuess()">Send Guess</button>
+    </p>
+  </div>
+  <div class="p-20">
+    <button (click)="leaveSession()">Leave Session</button>
+  </div>
+  <div class="p-20">
+    Players:
+    <ul>
+      <li *ngFor="let player of stateService.players()">
+        <ng-container *ngIf="hasGuessed(player); else notGuessedYet">
+          <ng-container
+            *ngIf="player.guess === undefined; else notNumberDecider"
+          >
+            {{ player.name }} has decided a number
+          </ng-container>
+          <ng-template #notNumberDecider>
+            {{ player.name }} has guessed
+          </ng-template>
+        </ng-container>
+        <ng-template #notGuessedYet>
+          {{ player.name }} has not guessed yet
+        </ng-template>
+      </li>
+    </ul>
+  </div>
+</div>

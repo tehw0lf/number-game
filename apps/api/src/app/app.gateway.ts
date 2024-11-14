@@ -8,6 +8,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { environment, Player } from '@number-game/core';
+import generateAvatar from 'github-like-avatar-generator';
 
 const connectedClients = new Map<
   string,
@@ -185,19 +186,23 @@ export class AppGateway
   @SubscribeMessage('joinSession')
   handleInitializeClientMessage(
     clientSocket: WebSocket,
-    data: { uuid: string; sessionID: string; name: string; pic: string }
+    data: { uuid: string; sessionID: string; name: string }
   ): void {
     const newSessionID = data.sessionID
       ? data.sessionID
       : this.generateSessionID();
     const newClientID = data.uuid ? data.uuid : this.generateClientID();
+    const pic = generateAvatar({
+      blocks: 6,
+      width: 100,
+    }).base64;
 
     if (!sessionInfo.has(data.sessionID)) {
       const players = [
         {
           uuid: newClientID,
           name: data.name,
-          pic: data.pic,
+          pic,
           guess: -1,
           won: false,
         },
@@ -218,7 +223,7 @@ export class AppGateway
         sessionInfo.get(data.sessionID).players.push({
           uuid: newClientID,
           name: data.name,
-          pic: data.pic,
+          pic,
           guess: -1,
           won: false,
         });
@@ -235,7 +240,7 @@ export class AppGateway
         serverState: {
           uuid: newClientID,
           name: data.name,
-          pic: data.pic,
+          pic,
           sessionID: newSessionID,
         },
       })

@@ -1,0 +1,58 @@
+<h1 [title]="'Number Game'"></h1>
+
+<div>
+  <div class="p-20">
+    Name: {{ stateService.userInfo()?.name }} (picture:
+    {{ stateService.userInfo()?.pic }})
+  </div>
+  <div class="p-20">SessionID: {{ stateService.sessionUser()?.sessionID }}</div>
+  <div class="p-20">
+    <ng-container *ngIf="stateService.isNumberDecider(); else elseTemplate2">
+      The number you set:
+    </ng-container>
+    <ng-template #elseTemplate2> Your guess: </ng-template>
+    {{ stateService.userGuess() }}
+    <ng-container *ngIf="!stateService.isNumberDecider()">
+      <ng-container *ngIf="stateService.isWinner(); else elseTemplate3">
+        Congrats, you have won! The correct number was
+        {{ stateService.winningNumber() }}!
+      </ng-container>
+      <ng-template #elseTemplate3>
+        Sadly you have not won :( The correct number was
+        {{ stateService.winningNumber() }}!
+      </ng-template>
+    </ng-container>
+    <ng-container *ngIf="stateService.winners().length > 0">
+      Winners:
+      <ul>
+        <li *ngFor="let winner of stateService.winners()">
+          {{ winner.name }} ({{ winner.guess }})
+        </li>
+      </ul>
+      <button (click)="newRound()">New Round</button>
+    </ng-container>
+  </div>
+  <div class="p-20">
+    <button (click)="leaveSession()">Leave Session</button>
+  </div>
+  <div class="p-20">
+    Players:
+    <ul>
+      <li *ngFor="let player of stateService.players()">
+        <ng-container *ngIf="hasGuessed(player); else notGuessedYet">
+          <ng-container
+            *ngIf="player.guess === undefined; else notNumberDecider"
+          >
+            {{ player.name }} has decided a number
+          </ng-container>
+          <ng-template #notNumberDecider>
+            {{ player.name }} has guessed
+          </ng-template>
+        </ng-container>
+        <ng-template #notGuessedYet>
+          {{ player.name }} has not guessed yet</ng-template
+        >
+      </li>
+    </ul>
+  </div>
+</div>
