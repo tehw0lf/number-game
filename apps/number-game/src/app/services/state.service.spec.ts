@@ -2,12 +2,6 @@ import { TestBed } from '@angular/core/testing';
 
 import { StateService } from './state.service';
 
-const mockUser = { sessionUser: { uuid: '', sessionID: '' } };
-
-const mockPlayers = {
-  players: [{ uuid: '123', name: '', pic: '', guess: 0, won: false }],
-};
-
 const mockWinnersOneWinner = {
   players: [
     { uuid: '123', name: '', pic: '', guess: 0, won: true },
@@ -29,12 +23,6 @@ const mockWinnersNoWinners = {
     { uuid: '231', name: '', pic: '', guess: 0, won: false },
   ],
 };
-
-const mockUserGuessValid = { userGuess: 0 };
-const mockUserGuessInvalid = { userGuess: -1 };
-
-const mockWinningNumberValid = { winningNumber: 0 };
-const mockWinningNumberInvalid = { winningNumber: -1 };
 
 const mockNumberDecider = {
   sessionUser: { uuid: '123', sessionID: '' },
@@ -82,200 +70,109 @@ describe('StateService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return the user', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: { data: mockUser },
-    });
-    query.user$.subscribe((user: SessionUser) => {
-      expect(user).toBe(mockUser.sessionUser);
-      done();
-    });
+  it('should return one winner if one player has won', () => {
+    service.players.set(mockWinnersOneWinner.players);
+
+    expect(service.winners().length).toBe(1);
   });
 
-  it('should return the players', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: { data: mockPlayers },
-    });
-    query.players$.subscribe((players: Player[]) => {
-      expect(players).toBe(mockPlayers.players);
-      done();
-    });
+  it('should return two winners if two players have won', () => {
+    service.players.set(mockWinnersTwoWinners.players);
+
+    expect(service.winners().length).toBe(2);
   });
 
-  it('should return one winner if one player has won', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: { data: mockWinnersOneWinner },
-    });
-    query.winners$.subscribe((winners: Player[]) => {
-      expect(winners.length).toBe(1);
-      done();
-    });
+  it('should return no winners if no players have won', () => {
+    service.players.set(mockWinnersNoWinners.players);
+
+    expect(service.winners().length).toBe(0);
   });
 
-  it('should return two winners if two players have won', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: { data: mockWinnersTwoWinners },
-    });
-    query.winners$.subscribe((winners: Player[]) => {
-      expect(winners.length).toBe(2);
-      done();
-    });
+  it('should return true if a player has decided a number', () => {
+    service.players.set(mockNumberDecider.players);
+    service.sessionUser.set(mockNumberDecider.sessionUser);
+
+    expect(service.isNumberDecider()).toBe(true);
   });
 
-  it('should return no winners if no players have won', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: { data: mockWinnersNoWinners },
-    });
-    query.winners$.subscribe((winners: Player[]) => {
-      expect(winners.length).toBe(0);
-      done();
-    });
+  it('should return false if a player has not decided a number', () => {
+    service.players.set(mockNoNumberDecider.players);
+    service.sessionUser.set(mockNoNumberDecider.sessionUser);
+
+    expect(service.isNumberDecider()).toBe(false);
   });
 
-  it('should return the guessed number if it is greater than 0', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: { data: mockUserGuessValid },
-    });
-    query.userGuess$.subscribe((guess: number) => {
-      expect(guess).toBe(mockUserGuessValid.userGuess);
-      done();
-    });
+  it('should return true if a player has won', () => {
+    service.players.set(mockIsWinner.players);
+    service.sessionUser.set(mockIsWinner.sessionUser);
+
+    expect(service.isWinner()).toBe(true);
   });
 
-  it('should not return the guessed number if it is below 0', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: { data: mockUserGuessInvalid },
-    });
-    query.userGuess$.subscribe((guess: number) => {
-      expect(guess).toBe(undefined);
-      done();
-    });
+  it('should return false if no player has won', () => {
+    service.players.set(mockIsNoWinner.players);
+    service.sessionUser.set(mockIsNoWinner.sessionUser);
+
+    expect(service.isWinner()).toBe(false);
   });
 
-  it('should return the winning number if it is greater than 0', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: { data: mockWinningNumberValid },
-    });
-    query.winningNumber$.subscribe((winningNumber: number) => {
-      expect(winningNumber).toBe(mockWinningNumberValid.winningNumber);
-      done();
-    });
+  it('should return false if the player has no uuid', () => {
+    service.players.set(mockIsInvalidWinner.players);
+    service.sessionUser.set(mockIsInvalidWinner.sessionUser);
+
+    expect(service.isWinner()).toBe(false);
   });
 
-  it('should not return the winning number if it is below 0', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: { data: mockWinningNumberInvalid },
-    });
-    query.winningNumber$.subscribe((winningNumber: number) => {
-      expect(winningNumber).toBe(undefined);
-      done();
-    });
+  it('should visit home if a session is established', () => {
+    service.sessionUser.set(mockCanVisitHome.sessionUser);
+
+    expect(service.canVisitHome()).toBe(true);
   });
 
-  it('should return true if a player has decided a number', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: {
-        data: mockNumberDecider,
-      },
-    });
-    query.isNumberDecider$.subscribe((isNumberDecider) => {
-      expect(isNumberDecider).toBeTruthy();
-      done();
-    });
+  it('should not visit home if no session is established', () => {
+    service.sessionUser.set(mockCanNotVisitHome.sessionUser);
+
+    expect(service.canVisitHome()).toBe(false);
+  });
+  it('should visit result if a session is established and a guess is set', () => {
+    service.sessionUser.set(mockCanVisitResult.sessionUser);
+    service.userGuess.set(mockCanVisitResult.userGuess);
+
+    expect(service.canVisitResult()).toBe(true);
   });
 
-  it('should return false if a player has not decided a number', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: {
-        data: mockNoNumberDecider,
-      },
-    });
-    query.isNumberDecider$.subscribe((isNumberDecider) => {
-      expect(isNumberDecider).toBeFalsy();
-      done();
-    });
+  it('should not visit result if no session is established and no guess is set', () => {
+    service.sessionUser.set(mockCanNotVisitResult.sessionUser);
+    service.userGuess.set(mockCanNotVisitResult.userGuess);
+
+    expect(service.canVisitResult()).toBe(false);
   });
 
-  it('should return true if a player has won', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: {
-        data: mockIsWinner,
-      },
-    });
-    query.isWinner$.subscribe((isWinner) => {
-      expect(isWinner).toBeTruthy();
-      done();
-    });
+  it('should reset session data', () => {
+    service.sessionUser.set({ uuid: '', sessionID: '' });
+    service.players.set([
+      { uuid: '123', name: '', pic: '', guess: 0, won: false },
+    ]);
+    service.userGuess.set(1);
+    service.session.set({ data: 'any' });
+    service.winningNumber.set(1);
+
+    service.resetSession();
+
+    expect(service.sessionUser()).toBeNull();
+    expect(service.players()).toEqual([]);
+    expect(service.userGuess()).toEqual(-1);
+    expect(service.session()).toBeNull();
+    expect(service.winningNumber()).toEqual(-1);
   });
 
-  it('should return false if no player has won', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: {
-        data: mockIsNoWinner,
-      },
+  it('should reset user info', () => {
+    service.userInfo.set({
+      name: 'user',
     });
-    query.isWinner$.subscribe((isWinner) => {
-      expect(isWinner).toBeFalsy();
-      done();
-    });
-  });
 
-  it('should return false if the player has no uuid', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: {
-        data: mockIsInvalidWinner,
-      },
-    });
-    query.isWinner$.subscribe((isWinner) => {
-      expect(isWinner).toBeFalsy();
-      done();
-    });
-  });
+    service.resetUserInfo();
 
-  it('should visit home if a session is established', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: {
-        data: mockCanVisitHome,
-      },
-    });
-    query.canVisitHome$.subscribe((canVisitHome) => {
-      expect(canVisitHome).toBeTruthy();
-      done();
-    });
-  });
-
-  it('should not visit home if no session is established', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: {
-        data: mockCanNotVisitHome,
-      },
-    });
-    query.canVisitHome$.subscribe((canVisitHome) => {
-      expect(canVisitHome).toBeFalsy();
-      done();
-    });
-  });
-  it('should visit result if a session is established and a guess is set', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: {
-        data: mockCanVisitResult,
-      },
-    });
-    query.canVisitResult$.subscribe((canVisitResult) => {
-      expect(canVisitResult).toBeTruthy();
-      done();
-    });
-  });
-
-  it('should not visit result if no session is established and no guess is set', (done: jest.DoneCallback) => {
-    runStoreAction('session', StoreActions.Update, {
-      payload: {
-        data: mockCanNotVisitResult,
-      },
-    });
-    query.canVisitResult$.subscribe((canVisitResult) => {
-      expect(canVisitResult).toBeFalsy();
-      done();
-    });
+    expect(service.userInfo()).toBeNull();
   });
 });
