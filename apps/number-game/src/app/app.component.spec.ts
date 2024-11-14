@@ -1,27 +1,29 @@
-import { TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
-import { NxWelcomeComponent } from './nx-welcome.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 
+import { AppComponent } from './app.component';
+import { SessionService } from './services/session.service';
+
+const mockSessionService = {
+  initializeConnection: jest.fn(),
+};
+
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent, NxWelcomeComponent, RouterModule.forRoot([])],
+      imports: [AppComponent, RouterModule.forRoot([])],
+      providers: [{ provide: SessionService, useValue: mockSessionService }],
     }).compileComponents();
-  });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Welcome number-game'
-    );
   });
 
-  it(`should have as title 'number-game'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('number-game');
+  it('should initialize a session', () => {
+    expect(mockSessionService.initializeConnection).toHaveBeenCalled();
   });
 });
