@@ -5,9 +5,9 @@ import {
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
+  WebSocketServer
 } from '@nestjs/websockets';
-import { environment, Player } from '@number-game/core';
+import { environment, GameMode, Player } from '@number-game/core';
 import generateAvatar from 'github-like-avatar-generator';
 import { WebSocket } from 'ws';
 
@@ -23,8 +23,9 @@ const winningNumbers = new Map<
 const sessionInfo = new Map<
   string,
   {
-    winningNumber: number;
+    gameMode: GameMode;
     players: Player[];
+    winningNumber: number;
   }
 >();
 
@@ -171,8 +172,9 @@ export class AppGateway
       ];
 
       sessionInfo.set(newSessionID, {
-        winningNumber: -1,
+        gameMode: GameMode.exact,
         players: players,
+        winningNumber: -1,
       });
     } else {
       let playerExists = false;
@@ -189,6 +191,10 @@ export class AppGateway
           guess: -1,
           won: false,
         });
+
+        if (sessionInfo.get(data.sessionID).players.length > 2) {
+          sessionInfo.get(data.sessionID).gameMode = GameMode.distance;
+        }
       }
     }
 
@@ -271,22 +277,25 @@ export class AppGateway
     let currentWinners: string[];
     let currentWinningDistance = Math.min(); //Infinity
     const winningNumber = winningNumbers.get(sessionID).winningNumber;
-    if (sessionInfo.get(sessionID).players.length > 2) {
-      guesses.forEach((pair) => {
-        const distance = Math.abs(pair.guess - winningNumber);
-        if (distance < currentWinningDistance) {
-          currentWinners = [pair.uuid];
-          currentWinningDistance = distance;
-        } else if (distance === currentWinningDistance) {
-          currentWinners.push(pair.uuid);
-        }
-      });
-    } else if (sessionInfo.get(sessionID).players.length === 2) {
-      guesses.forEach((pair) => {
-        if (pair.guess === winningNumber) {
-          currentWinners = [pair.uuid];
-        }
-      });
+    switch (sessionInfo.get(sessionID).gameMode) {
+      case GameMode.distance:
+        guesses.forEach((pair) => {
+          const distance = Math.abs(pair.guess - winningNumber);
+          if (distance < currentWinningDistance) {
+            currentWinners = [pair.uuid];
+            currentWinningDistance = distance;
+          } else if (distance === currentWinningDistance) {
+            currentWinners.push(pair.uuid);
+          }
+        });
+        break;
+      case GameMode.exact:
+        guesses.forEach((pair) => {
+          if (pair.guess === winningNumber) {
+            currentWinners = [pair.uuid];
+          }
+        });
+        break;
     }
 
     sessionInfo.get(sessionID).players.forEach((player: Player) => {
