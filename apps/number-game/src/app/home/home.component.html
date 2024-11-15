@@ -2,15 +2,17 @@
 
 <div>
   <div class="p-20">
-    Name: {{ stateService.userInfo()?.name }} (picture:
-    {{ stateService.userInfo()?.pic }})
+    {{ stateService.userInfo()?.pic }}
+  </div>
+  <div class="p-20">
+    {{ stateService.userInfo()?.name }}
   </div>
   <div class="p-20">SessionID: {{ stateService.sessionUser()?.sessionID }}</div>
   <div class="p-20">
     Guess the number (or set it if you are the first to submit):
     <p>
       <input
-        type="text"
+        type="number"
         placeholder="3"
         [(ngModel)]="guess"
         (keyup.enter)="sendGuess()"
