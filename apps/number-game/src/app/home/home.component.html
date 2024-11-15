@@ -27,21 +27,19 @@
   </div>
   <div class="p-20">
     Players:
-    <ul>
+    <ul style="list-style: none">
       <li *ngFor="let player of stateService.players()">
+        <img [src]="player.pic" alt="pic" />
+        {{ player.name }} has
         <ng-container *ngIf="hasGuessed(player); else notGuessedYet">
           <ng-container
             *ngIf="player.guess === undefined; else notNumberDecider"
           >
-            {{ player.name }} has decided a number
+            decided a number
           </ng-container>
-          <ng-template #notNumberDecider>
-            {{ player.name }} has guessed
-          </ng-template>
+          <ng-template #notNumberDecider> guessed </ng-template>
         </ng-container>
-        <ng-template #notGuessedYet>
-          {{ player.name }} has not guessed yet
-        </ng-template>
+        <ng-template #notGuessedYet> not guessed yet </ng-template>
       </li>
     </ul>
   </div>
