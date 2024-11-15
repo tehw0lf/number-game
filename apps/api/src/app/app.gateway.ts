@@ -155,8 +155,8 @@ export class AppGateway
       : this.generateSessionID();
     const newClientID = data.uuid ? data.uuid : this.generateClientID();
     const pic = generateAvatar({
-      blocks: 6,
-      width: 100,
+      blocks: 8,
+      width: 64,
     }).base64;
 
     if (!sessionInfo.has(data.sessionID)) {
