@@ -2,7 +2,7 @@
 
 <div>
   <div class="p-20">
-    {{ stateService.userInfo()?.pic }}
+    <img [src]="stateService.userInfo()?.pic" alt="pic" />
   </div>
   <div class="p-20">
     {{ stateService.userInfo()?.name }}
