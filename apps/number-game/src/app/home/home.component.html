@@ -7,7 +7,16 @@
   <div class="p-20">
     {{ stateService.userInfo()?.name }}
   </div>
-  <div class="p-20">SessionID: {{ stateService.sessionUser()?.sessionID }}</div>
+  <div class="p-20">
+    SessionID: {{ stateService.sessionUser()?.sessionID }}
+    <button
+      *ngIf="stateService.sessionUser()"
+      (click)="copyToClipboard()"
+      class="copy-button"
+    >
+      <img src="clipboard.png" alt="copy" class="copy-icon" />
+    </button>
+  </div>
   <div class="p-20">
     Guess the number (or set it if you are the first to submit):
     <p>
