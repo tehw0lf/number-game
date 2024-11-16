@@ -2,8 +2,10 @@
 
 <div>
   <div class="p-20">
-    Name: {{ stateService.userInfo()?.name }} (picture:
-    {{ stateService.userInfo()?.pic }})
+    <img [src]="stateService.userInfo()?.pic" alt="pic" />
+  </div>
+  <div class="p-20">
+    {{ stateService.userInfo()?.name }}
   </div>
   <div class="p-20">SessionID: {{ stateService.sessionUser()?.sessionID }}</div>
   <div class="p-20">
@@ -22,7 +24,7 @@
         {{ stateService.winningNumber() }}!
       </ng-template>
     </ng-container>
-    <ng-container *ngIf="stateService.winners().length > 0">
+    <ng-container *ngIf="stateService.winningNumber() > 0">
       Winners:
       <ul>
         <li *ngFor="let winner of stateService.winners()">
@@ -47,6 +49,7 @@
           </ng-container>
           <ng-template #notNumberDecider>
             {{ player.name }} has guessed
+            <span *ngIf="stateService.isWinner()">and <b>won</b></span>
           </ng-template>
         </ng-container>
         <ng-template #notGuessedYet>

@@ -1,4 +1,4 @@
-export interface SessionUser {
+export type SessionUser = {
   uuid: string;
   sessionID: string;
-}
+};

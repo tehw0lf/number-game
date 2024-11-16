@@ -3,6 +3,6 @@ import { Module } from '@nestjs/common';
 import { AppGateway } from './app.gateway';
 
 @Module({
-  controllers: [AppGateway],
+  imports: [AppGateway],
 })
 export class AppModule {}

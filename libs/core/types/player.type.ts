@@ -1,7 +1,7 @@
-export interface Player {
+export type Player = {
   uuid: string;
   name: string;
   pic: string;
   guess?: number;
   won: boolean;
-}
+};
