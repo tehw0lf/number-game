@@ -194,6 +194,9 @@ export class AppGateway
 
         if (sessionInfo.get(data.sessionID).players.length > 2) {
           sessionInfo.get(data.sessionID).gameMode = GameMode.distance;
+          this.logger.log(
+            `Third player has connected, switching game mode to distance for ${data.sessionID}`
+          );
         }
       }
     }
