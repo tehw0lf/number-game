@@ -5,7 +5,7 @@ import {
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { environment, GameMode, Player } from '@number-game/core';
 import generateAvatar from 'github-like-avatar-generator';
@@ -20,6 +20,7 @@ const winningNumbers = new Map<
   string,
   { uuid: string; winningNumber: number }
 >();
+
 const sessionInfo = new Map<
   string,
   {
