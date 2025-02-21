@@ -8,34 +8,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Install node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.11.0
-          registry-url: 'https://registry.npmjs.org'
-      - name: Enable Nx SHAs
-        uses: nrwl/nx-set-shas@v4
-        with:
-          main-branch-name: main
-      - name: Install packages
-        run: npm ci
-      - name: Lint
-        run: npx nx affected:lint
-      - name: Test
-        run: npx nx affected:test --ci --code-coverage
-      - name: Build on branch
-        if: ${{ github.event_name != 'push' }}
-        run: npx nx affected:build
-      - name: Build on main
-        if: ${{ github.event_name == 'push' }}
-        run: npx nx affected:build --skip-nx-cache
-      - name: Sync Android project
-        run: npx nx run number-game:sync:android
-      - name: Sync iOS project
-        run: npx nx run number-game:sync:ios
+    name: external workflow
+    uses: tehw0lf/workflows/.github/workflows/build-test-publish.yml@main
+    permissions:
+      actions: write
+      contents: write
+      packages: write
+    with:
+      tool: 'npm'
+      lint: 'run affected:lint'
+      test: 'run affected:test'
+      build_branch: 'run affected:build'
+      build_main: 'run affected:build --skip-nx-cache'
+      post_build_script: 'run sync-all'
+      event_name: ${{ github.event_name }}

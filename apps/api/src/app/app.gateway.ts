@@ -7,7 +7,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { environment, Player } from '@number-game/core';
+import { environment, GameMode, Player } from '@number-game/core';
 import generateAvatar from 'github-like-avatar-generator';
 import { WebSocket } from 'ws';
 
@@ -20,11 +20,13 @@ const winningNumbers = new Map<
   string,
   { uuid: string; winningNumber: number }
 >();
+
 const sessionInfo = new Map<
   string,
   {
-    winningNumber: number;
+    gameMode: GameMode;
     players: Player[];
+    winningNumber: number;
   }
 >();
 
@@ -40,15 +42,16 @@ export class AppGateway
   private minimumSessionID = 100000;
   private maximumSessionID = 999999;
 
-  afterInit() {
+  afterInit(): void {
     this.logger.log('WebSocketServer initialized');
   }
 
-  handleConnection(clientSocket: WebSocket) {
+  handleConnection(clientSocket: WebSocket): void {
     this.logger.log('New client connected');
   }
 
-  handleDisconnect(clientSocket: WebSocket) {
+  handleDisconnect(clientSocket: WebSocket): void {
+    if (!clientSocket) return;
     let clientUuid;
     connectedClients.forEach(
       (client: { sessionID: string; socket: WebSocket }, uuid) => {
@@ -62,16 +65,6 @@ export class AppGateway
     this.logger.log(`Client ${clientUuid} disconnected.`);
   }
 
-  private restartRound(sessionID: string): void {
-    winningNumbers.set(sessionID, undefined);
-    sessionInfo.get(sessionID).winningNumber = -1;
-    sessionInfo.get(sessionID).players.forEach((player: Player) => {
-      player.guess = -1;
-      player.won = false;
-    });
-    this.broadcastToClients(sessionID, 'restart', sessionInfo.get(sessionID));
-  }
-
   @SubscribeMessage('leaveSession')
   handleIncomingLeaveSessionMessage(
     clientSocket: WebSocket,
@@ -79,7 +72,8 @@ export class AppGateway
       uuid: string;
       sessionID: string;
     }
-  ) {
+  ): void {
+    if (!data) return;
     this.logger.log(`'leaveSession': ${JSON.stringify(data)}`);
     let clientInSession = false;
     if (sessionInfo.get(data.sessionID)) {
@@ -99,7 +93,8 @@ export class AppGateway
   handleIncomingNewRoundMessage(
     clientSocket: WebSocket,
     data: { uuid: string; sessionID: string }
-  ) {
+  ): void {
+    if (!data) return;
     this.logger.log(`'newRound': ${JSON.stringify(data)}`);
     let restartRequestValid = false;
     if (sessionInfo.get(data.sessionID)) {
@@ -120,6 +115,7 @@ export class AppGateway
     clientSocket: WebSocket,
     data: { uuid: string; sessionID: string; guess: number }
   ): void {
+    if (!data) return;
     if (!winningNumbers.get(data.sessionID)) {
       winningNumbers.set(data.sessionID, {
         uuid: data.uuid,
@@ -150,52 +146,19 @@ export class AppGateway
     );
   }
 
-  private getGuesses(sessionID: string): { uuid: string; guess: number }[] {
-    const guesses = [];
-    sessionInfo.get(sessionID).players.forEach((player: Player) => {
-      if (player.guess >= 0) {
-        guesses.push({ uuid: player.uuid, guess: player.guess });
-      }
-    });
-    return guesses;
-  }
-
-  private calculateWinners(
-    sessionID: string,
-    guesses: { uuid: string; guess: number }[]
-  ): void {
-    let currentWinners: string[];
-    let currentWinningDistance = Math.min(); //Infinity
-    const winningNumber = winningNumbers.get(sessionID).winningNumber;
-    guesses.forEach((pair) => {
-      const distance = Math.abs(pair.guess - winningNumber);
-      if (distance < currentWinningDistance) {
-        currentWinners = [pair.uuid];
-        currentWinningDistance = distance;
-      } else if (distance === currentWinningDistance) {
-        currentWinners.push(pair.uuid);
-      }
-    });
-    sessionInfo.get(sessionID).players.forEach((player: Player) => {
-      if (currentWinners.includes(player.uuid)) {
-        player.won = true;
-      }
-    });
-    sessionInfo.get(sessionID).winningNumber = winningNumber;
-  }
-
   @SubscribeMessage('joinSession')
   handleInitializeClientMessage(
     clientSocket: WebSocket,
     data: { uuid: string; sessionID: string; name: string }
   ): void {
+    if (!data) return;
     const newSessionID = data.sessionID
       ? data.sessionID
       : this.generateSessionID();
     const newClientID = data.uuid ? data.uuid : this.generateClientID();
     const pic = generateAvatar({
-      blocks: 6,
-      width: 100,
+      blocks: 8,
+      width: 64,
     }).base64;
 
     if (!sessionInfo.has(data.sessionID)) {
@@ -210,8 +173,9 @@ export class AppGateway
       ];
 
       sessionInfo.set(newSessionID, {
-        winningNumber: -1,
+        gameMode: GameMode.exact,
         players: players,
+        winningNumber: -1,
       });
     } else {
       let playerExists = false;
@@ -228,6 +192,13 @@ export class AppGateway
           guess: -1,
           won: false,
         });
+
+        if (sessionInfo.get(data.sessionID).players.length > 2) {
+          sessionInfo.get(data.sessionID).gameMode = GameMode.distance;
+          this.logger.log(
+            `Third player has connected, switching game mode to distance for ${data.sessionID}`
+          );
+        }
       }
     }
 
@@ -281,6 +252,62 @@ export class AppGateway
         .get(player.uuid)
         .socket.send(JSON.stringify({ eventType, serverState }));
     });
+  }
+
+  private getGuesses(sessionID: string): { uuid: string; guess: number }[] {
+    const guesses = [];
+    sessionInfo.get(sessionID).players.forEach((player: Player) => {
+      if (player.guess >= 0) {
+        guesses.push({ uuid: player.uuid, guess: player.guess });
+      }
+    });
+    return guesses;
+  }
+
+  private restartRound(sessionID: string): void {
+    winningNumbers.set(sessionID, undefined);
+    sessionInfo.get(sessionID).winningNumber = -1;
+    sessionInfo.get(sessionID).players.forEach((player: Player) => {
+      player.guess = -1;
+      player.won = false;
+    });
+    this.broadcastToClients(sessionID, 'restart', sessionInfo.get(sessionID));
+  }
+
+  private calculateWinners(
+    sessionID: string,
+    guesses: { uuid: string; guess: number }[]
+  ): void {
+    let currentWinners: string[];
+    let currentWinningDistance = Math.min(); //Infinity
+    const winningNumber = winningNumbers.get(sessionID).winningNumber;
+    switch (sessionInfo.get(sessionID).gameMode) {
+      case GameMode.distance:
+        guesses.forEach((pair) => {
+          const distance = Math.abs(pair.guess - winningNumber);
+          if (distance < currentWinningDistance) {
+            currentWinners = [pair.uuid];
+            currentWinningDistance = distance;
+          } else if (distance === currentWinningDistance) {
+            currentWinners.push(pair.uuid);
+          }
+        });
+        break;
+      case GameMode.exact:
+        guesses.forEach((pair) => {
+          if (pair.guess === winningNumber) {
+            currentWinners = [pair.uuid];
+          }
+        });
+        break;
+    }
+
+    sessionInfo.get(sessionID).players.forEach((player: Player) => {
+      if (currentWinners && currentWinners.includes(player.uuid)) {
+        player.won = true;
+      }
+    });
+    sessionInfo.get(sessionID).winningNumber = winningNumber;
   }
 
   private leaveSession(sessionID: string, uuid: string): void {
