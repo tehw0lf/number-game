@@ -45,4 +45,8 @@ export class HomeComponent {
       console.error('Please enter a number first, currently it is', this.guess);
     }
   }
+
+  copyToClipboard(): void {
+    navigator.clipboard.writeText(this.stateService.sessionUser()!.sessionID);
+  }
 }
