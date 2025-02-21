@@ -2,7 +2,13 @@
   "name": "@number-game/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "affected:lint": "nx affected:lint",
+    "affected:test": "nx affected:test --ci --code-coverage",
+    "affected:build": "nx affected:build",
+    "affected": "nx affected",
+    "sync-all": "nx run number-game:sync:android && nx run number-game:sync:ios"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~18.2.0",
