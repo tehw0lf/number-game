@@ -1,4 +1,4 @@
-name: number-game build pipeline
+name: build pipeline
 
 on:
   push:
