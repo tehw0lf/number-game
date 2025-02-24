@@ -26,6 +26,7 @@ jobs:
       event_name: ${{ github.event_name }}
       runner: 'macos-latest'
       app_root: 'apps/number-game'
+      NODE_OPTIONS: '--max-old-space-size=4096'
     secrets:
       ANDROID_KEYPASS: ${{ secrets.ANDROID_KEYPASS }}
       ANDROID_STOREPASS: ${{ secrets.ANDROID_STOREPASS }}
