@@ -5,6 +5,8 @@ on:
     branches:
       - main
   pull_request:
+  schedule:
+    - cron: '0 0 * * 7'
 
 jobs:
   build:
@@ -22,3 +24,9 @@ jobs:
       build_main: 'run affected:build --skip-nx-cache'
       post_build_script: 'run sync-all'
       event_name: ${{ github.event_name }}
+      runner: 'macos-latest'
+    secrets:
+      ANDROID_KEYPASS: ${{ secrets.ANDROID_KEYPASS }}
+      ANDROID_STOREPASS: ${{ secrets.ANDROID_STOREPASS }}
+      APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+      APPLE_ID: ${{ secrets.APPLE_ID }}
