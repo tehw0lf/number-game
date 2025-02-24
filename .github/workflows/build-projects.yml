@@ -25,8 +25,10 @@ jobs:
       post_build_script: 'run sync-all'
       event_name: ${{ github.event_name }}
       runner: 'macos-latest'
+      app_root: 'apps/number-game'
     secrets:
       ANDROID_KEYPASS: ${{ secrets.ANDROID_KEYPASS }}
       ANDROID_STOREPASS: ${{ secrets.ANDROID_STOREPASS }}
       APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
       APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_DEVELOPER_TEAM_ID: ${{ secrets.APPLE_DEVELOPER_TEAM_ID }}
