@@ -1,7 +1,6 @@
 {
   "name": "number-game",
   "dependencies": {
-    "@capacitor/ios": "../../node_modules/@capacitor/ios",
     "@capacitor/android": "../../node_modules/@capacitor/android"
   },
   "devDependencies": {

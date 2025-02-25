@@ -22,14 +22,10 @@ jobs:
       test: 'run affected:test'
       build_branch: 'run affected:build'
       build_main: 'run affected:build --skip-nx-cache'
-      post_build_script: 'run sync-all'
+      post_build_script: 'run sync'
       event_name: ${{ github.event_name }}
-      runner: 'macos-latest'
       app_root: 'apps/number-game'
       NODE_OPTIONS: '--max-old-space-size=4096'
     secrets:
       ANDROID_KEYPASS: ${{ secrets.ANDROID_KEYPASS }}
       ANDROID_STOREPASS: ${{ secrets.ANDROID_STOREPASS }}
-      APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
-      APPLE_ID: ${{ secrets.APPLE_ID }}
-      APPLE_DEVELOPER_TEAM_ID: ${{ secrets.APPLE_DEVELOPER_TEAM_ID }}
