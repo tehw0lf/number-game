@@ -6,12 +6,11 @@ import { SessionService } from '../services/session.service';
 import { StateService } from '../services/state.service';
 
 @Component({
-  selector: 'app-result',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './result.component.html',
-  styleUrl: './result.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-result',
+    imports: [CommonModule],
+    templateUrl: './result.component.html',
+    styleUrl: './result.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResultComponent {
   public stateService: StateService = inject(StateService);
