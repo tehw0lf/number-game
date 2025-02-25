@@ -98,9 +98,6 @@
         "cmd": "add"
       },
       "configurations": {
-        "ios": {
-          "cmd": "add ios"
-        },
         "android": {
           "cmd": "add android"
         }
@@ -112,9 +109,6 @@
         "cmd": "copy"
       },
       "configurations": {
-        "ios": {
-          "cmd": "copy ios"
-        },
         "android": {
           "cmd": "copy android"
         }
@@ -126,9 +120,6 @@
         "cmd": "open"
       },
       "configurations": {
-        "ios": {
-          "cmd": "open ios"
-        },
         "android": {
           "cmd": "open android"
         }
@@ -140,9 +131,6 @@
         "cmd": "run"
       },
       "configurations": {
-        "ios": {
-          "cmd": "run ios"
-        },
         "android": {
           "cmd": "run android"
         }
@@ -154,9 +142,6 @@
         "cmd": "sync"
       },
       "configurations": {
-        "ios": {
-          "cmd": "sync ios"
-        },
         "android": {
           "cmd": "sync android"
         }
@@ -168,9 +153,6 @@
         "cmd": "update"
       },
       "configurations": {
-        "ios": {
-          "cmd": "update ios"
-        },
         "android": {
           "cmd": "update android"
         }

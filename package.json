@@ -7,7 +7,7 @@
     "affected:test": "nx affected:test --ci --code-coverage",
     "affected:build": "nx affected:build",
     "affected": "nx affected",
-    "sync-all": "nx run number-game:sync:android && nx run number-game:sync:ios"
+    "sync": "nx run number-game:sync"
   },
   "private": true,
   "dependencies": {
@@ -22,7 +22,6 @@
     "@capacitor/android": "^6.0.0",
     "@capacitor/app": "^6.0.0",
     "@capacitor/core": "^6.0.0",
-    "@capacitor/ios": "^6.0.0",
     "@nestjs/common": "^10.0.2",
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
