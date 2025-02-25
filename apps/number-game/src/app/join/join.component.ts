@@ -11,12 +11,11 @@ import { FormsModule } from '@angular/forms';
 import { SessionService } from '../services/session.service';
 
 @Component({
-  selector: 'app-join',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './join.component.html',
-  styleUrl: './join.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-join',
+    imports: [CommonModule, FormsModule],
+    templateUrl: './join.component.html',
+    styleUrl: './join.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JoinComponent {
   name: WritableSignal<string> = signal('');
