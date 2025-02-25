@@ -26,5 +26,4 @@ jobs:
       event_name: ${{ github.event_name }}
       app_root: 'apps/number-game'
     secrets:
-      ANDROID_KEYPASS: ${{ secrets.ANDROID_KEYPASS }}
       ANDROID_STOREPASS: ${{ secrets.ANDROID_STOREPASS }}
