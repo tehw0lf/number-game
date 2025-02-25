@@ -1,10 +1,12 @@
-name: number-game build pipeline
+name: build and release pipeline
 
 on:
   push:
     branches:
       - main
   pull_request:
+  schedule:
+    - cron: '0 0 * * 0'
 
 jobs:
   build:
@@ -20,5 +22,9 @@ jobs:
       test: 'run affected:test'
       build_branch: 'run affected:build'
       build_main: 'run affected:build --skip-nx-cache'
-      post_build_script: 'run sync-all'
+      post_build_script: 'run sync'
       event_name: ${{ github.event_name }}
+      app_root: 'apps/number-game'
+    secrets:
+      ANDROID_KEYPASS: ${{ secrets.ANDROID_KEYPASS }}
+      ANDROID_STOREPASS: ${{ secrets.ANDROID_STOREPASS }}
