@@ -25,5 +25,7 @@ jobs:
       post_build_script: 'run sync'
       event_name: ${{ github.event_name }}
       app_root: 'apps/number-game'
+      artifact_path: 'dist'
+      docker_meta: '[{"name":"api","file":"Dockerfile.api"},{"name":"app","file":"Dockerfile.app"}]'
     secrets:
       ANDROID_STOREPASS: ${{ secrets.ANDROID_STOREPASS }}
