@@ -23,6 +23,10 @@ describe('AppComponent', () => {
     fixture.detectChanges();
   });
 
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
   it('should initialize a session', () => {
     expect(mockSessionService.initializeConnection).toHaveBeenCalled();
   });
