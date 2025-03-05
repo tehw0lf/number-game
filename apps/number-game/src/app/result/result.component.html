@@ -15,11 +15,11 @@
     <ng-template #notNumberDecider> Your guess: </ng-template>
     {{ stateService.userGuess() }}
     <ng-container *ngIf="!stateService.isNumberDecider()">
-      <ng-container *ngIf="stateService.isWinner(); else elseTemplate3">
+      <ng-container *ngIf="stateService.isWinner(); else notWinner">
         Congrats, you have won! The correct number was
         {{ stateService.winningNumber() }}!
       </ng-container>
-      <ng-template #elseTemplate3>
+      <ng-template #notWinner>
         Sadly you have not won :( The correct number was
         {{ stateService.winningNumber() }}!
       </ng-template>
