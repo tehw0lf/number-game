@@ -26,6 +26,6 @@ jobs:
       event_name: ${{ github.event_name }}
       app_root: 'apps/number-game'
       artifact_path: 'dist'
-      docker_meta: '[{"name":"number-game-api","file":"Dockerfile.api"},{"name":"number-game-app","file":"Dockerfile.app"}]'
+      #docker_meta: '[{"name":"number-game-api","file":"Dockerfile.api"},{"name":"number-game-app","file":"Dockerfile.app"}]'
     secrets:
       ANDROID_STOREPASS: ${{ secrets.ANDROID_STOREPASS }}
