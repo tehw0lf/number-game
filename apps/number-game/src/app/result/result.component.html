@@ -9,10 +9,12 @@
   </div>
   <div class="p-20">SessionID: {{ stateService.sessionUser()?.sessionID }}</div>
   <div class="p-20">
-    <ng-container *ngIf="stateService.isNumberDecider(); else notNumberDecider">
+    <ng-container
+      *ngIf="stateService.isNumberDecider(); else notInitialNumberDecider"
+    >
       The number you set:
     </ng-container>
-    <ng-template #notNumberDecider> Your guess: </ng-template>
+    <ng-template #notInitialNumberDecider> Your guess: </ng-template>
     {{ stateService.userGuess() }}
     <ng-container *ngIf="!stateService.isNumberDecider()">
       <ng-container *ngIf="stateService.isWinner(); else notWinner">
