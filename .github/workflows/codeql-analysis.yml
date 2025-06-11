@@ -37,7 +37,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          source-root: src
+          source-root: apps/number-game/src
 
       - name: Autobuild
         id: autobuild
