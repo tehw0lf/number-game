@@ -9,13 +9,14 @@
   </div>
   <div class="p-20">
     SessionID: {{ stateService.sessionUser()?.sessionID }}
-    <button
-      *ngIf="stateService.sessionUser()"
-      (click)="copyToClipboard()"
-      class="copy-button"
-    >
-      <img src="clipboard.png" alt="copy" class="copy-icon" />
-    </button>
+    @if (stateService.sessionUser()) {
+      <button
+        (click)="copyToClipboard()"
+        class="copy-button"
+        >
+        <img src="clipboard.png" alt="copy" class="copy-icon" />
+      </button>
+    }
   </div>
   <div class="p-20">
     Guess the number (or set it if you are the first to submit):
@@ -25,7 +26,7 @@
         placeholder="3"
         [(ngModel)]="guess"
         (keyup.enter)="sendGuess()"
-      />
+        />
     </p>
     <p>
       <button (click)="sendGuess()">Send Guess</button>
@@ -37,19 +38,21 @@
   <div class="p-20">
     Players:
     <ul style="list-style: none">
-      <li *ngFor="let player of stateService.players()">
-        <img [src]="player.pic" alt="pic" />
-        {{ player.name }} has
-        <ng-container *ngIf="hasGuessed(player); else notGuessedYet">
-          <ng-container
-            *ngIf="player.guess === undefined; else notNumberDecider"
-          >
-            decided a number
-          </ng-container>
-          <ng-template #notNumberDecider> guessed </ng-template>
-        </ng-container>
-        <ng-template #notGuessedYet> not guessed yet </ng-template>
-      </li>
+      @for (player of stateService.players(); track player) {
+        <li>
+          <img [src]="player.pic" alt="pic" />
+          {{ player.name }} has
+          @if (hasGuessed(player)) {
+            @if (player.guess === undefined) {
+              decided a number
+            } @else {
+              guessed
+            }
+          } @else {
+            not guessed yet
+          }
+        </li>
+      }
     </ul>
   </div>
 </div>
