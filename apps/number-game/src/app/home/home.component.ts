@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,11 +12,11 @@ import { SessionService } from '../services/session.service';
 import { StateService } from '../services/state.service';
 
 @Component({
-    selector: 'app-home',
-    imports: [CommonModule, FormsModule],
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-home',
+  imports: [FormsModule],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
   guess: WritableSignal<number | undefined> = signal(-1);
