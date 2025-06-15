@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SessionService } from './services/session.service';
@@ -11,7 +11,9 @@ import { SessionService } from './services/session.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  constructor(private sessionService: SessionService) {
+  private sessionService = inject(SessionService);
+
+  constructor() {
     this.sessionService.initializeConnection();
   }
 }
