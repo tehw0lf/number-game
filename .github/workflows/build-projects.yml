@@ -13,20 +13,21 @@ jobs:
     name: external workflow
     uses: tehw0lf/workflows/.github/workflows/build-test-publish.yml@main
     permissions:
-      id-token: write    # REQUIRED - Always needed for OIDC (npm Trusted Publishing + future integrations)
+      id-token: write
       actions: write
       contents: write
       packages: write
+      security-events: write
     with:
-      tool: 'npm'
-      lint: 'run affected:lint'
-      test: 'run affected:test'
-      build_branch: 'run affected:build'
-      build_main: 'run affected:build --skip-nx-cache'
-      post_build_script: 'run sync'
+      tool: "npm"
+      lint: "run affected:lint"
+      test: "run affected:test"
+      build_branch: "run affected:build"
+      build_main: "run affected:build --skip-nx-cache"
+      post_build_script: "run sync"
       event_name: ${{ github.event_name }}
-      app_root: 'apps/number-game'
-      artifact_path: 'dist'
+      app_root: "apps/number-game"
+      artifact_path: "dist"
       docker_meta: '[{"name":"number-game-api","file":"Dockerfile.api"},{"name":"number-game-app","file":"Dockerfile.app"}]'
     secrets:
       ANDROID_STOREPASS: ${{ secrets.ANDROID_STOREPASS }}
