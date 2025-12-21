@@ -9,6 +9,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- nosemgrep: java.android.security.exported_activity.exported_activity -->
+        <!-- MainActivity must be exported as it serves as the app launcher entry point.
+             This is REQUIRED for Android 12+ (API 31+) when an activity has an intent-filter.
+             Safe because: MainActivity extends BridgeActivity with no privileged functionality. -->
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
             android:name=".MainActivity"
