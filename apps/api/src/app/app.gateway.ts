@@ -10,6 +10,7 @@ import {
 import { environment, GameMode, Player } from '@number-game/core';
 import generateAvatar from 'github-like-avatar-generator';
 import { WebSocket } from 'ws';
+import { randomInt, randomBytes } from 'crypto';
 
 const connectedClients = new Map<
   string,
@@ -225,21 +226,16 @@ export class AppGateway
   }
 
   private generateSessionID(): string {
-    this.minimumSessionID = Math.ceil(this.minimumSessionID);
-    this.maximumSessionID = Math.floor(this.maximumSessionID);
-    const id =
-      Math.floor(
-        Math.random() * (this.maximumSessionID - this.minimumSessionID + 1)
-      ) + this.minimumSessionID;
+    const id = randomInt(this.minimumSessionID, this.maximumSessionID + 1);
     if (sessionInfo.has(id.toString())) {
-      this.generateSessionID();
+      return this.generateSessionID();
     } else {
       return id.toString();
     }
   }
 
   private generateClientID(): string {
-    return `${Math.floor(Date.now() * Math.random() * Math.random())}`;
+    return randomBytes(16).toString('hex');
   }
 
   private broadcastToClients(
