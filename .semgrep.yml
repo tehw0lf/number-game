@@ -1,0 +1,7 @@
+rules:
+  # Override the exported_activity rule to make it non-blocking for MainActivity
+  # This is a verified false positive - Android 12+ requires exported="true" for launcher activities
+  - id: java.android.security.exported_activity.exported_activity
+    paths:
+      exclude:
+        - apps/number-game/android/app/src/main/AndroidManifest.xml
