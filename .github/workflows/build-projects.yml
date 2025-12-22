@@ -23,7 +23,7 @@ jobs:
       lint: "run affected:lint"
       test: "run affected:test"
       build_branch: "run affected:build"
-      build_main: "run affected:build --skip-nx-cache"
+      build_main: "run build --skip-nx-cache"
       post_build_script: "run sync"
       event_name: ${{ github.event_name }}
       app_root: "apps/number-game"
