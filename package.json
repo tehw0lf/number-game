@@ -6,7 +6,7 @@
     "affected:lint": "nx affected:lint",
     "affected:test": "nx affected:test --ci --code-coverage",
     "affected:build": "nx affected:build",
-    "build": "nx run-many build",
+    "build": "nx run-many -t build",
     "affected": "nx affected",
     "sync": "nx run number-game:sync"
   },
