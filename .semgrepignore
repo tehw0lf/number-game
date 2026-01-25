@@ -1,7 +1,0 @@
-# Semgrep ignore file
-# Documentation: https://semgrep.dev/docs/ignoring-files-folders-code
-
-# Exclude the exported_activity rule for MainActivity in AndroidManifest.xml
-# This is a false positive - MainActivity MUST be exported for Android 12+ launcher activities
-# See: https://developer.android.com/about/versions/12/behavior-changes-12
-apps/number-game/android/app/src/main/AndroidManifest.xml:java.android.security.exported_activity.exported_activity
