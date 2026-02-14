@@ -84,5 +84,8 @@
     "typescript-eslint": "8.54.0",
     "webpack-cli": "5.1.4",
     "jest-util": "30.2.0"
+  },
+  "overrides": {
+    "readdirp": "4.1.2"
   }
 }
