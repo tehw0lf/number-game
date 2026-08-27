@@ -1,5 +1,5 @@
 FROM node:24.17-alpine
-RUN apk upgrade --no-cache
+RUN apk upgrade --no-cache && npm install -g npm@latest
 WORKDIR /usr/src/app
 COPY dist/api/* ./
 RUN npm install --omit=dev
