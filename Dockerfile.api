@@ -1,5 +1,20 @@
 FROM node:24.17-alpine
-RUN apk upgrade --no-cache && npm install -g npm@latest
+# npm bundles its own dependency tree, and the versions shipped with the current
+# npm release still carry known CVEs. Overwrite them with patched releases,
+# staying within each package's existing major so npm keeps working.
+# Recheck against `trivy image` when bumping the base image or npm.
+RUN apk upgrade --no-cache && npm install -g npm@latest \
+  && for spec in \
+       brace-expansion@5.0.9 \
+       ip-address@10.3.1 \
+       tar@7.5.21 \
+       undici@6.28.0 ; do \
+       name="${spec%@*}" ; \
+       npm pack "$spec" --pack-destination /tmp \
+       && tar -xzf /tmp/"$name"-*.tgz -C /tmp \
+       && cp -r /tmp/package/. "/usr/local/lib/node_modules/npm/node_modules/$name/" \
+       && rm -rf /tmp/package /tmp/*.tgz ; \
+     done
 WORKDIR /usr/src/app
 COPY dist/api/* ./
 RUN npm install --omit=dev
