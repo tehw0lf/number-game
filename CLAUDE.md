@@ -17,8 +17,7 @@ npx nx test api                # Backend unit tests
 npx nx test <project> -- --testFile=<path>  # Single test file
 
 # E2E tests
-npx nx e2e numveil-e2e    # Playwright frontend E2E
-npx nx e2e api-e2e            # Jest backend E2E
+npx nx e2e numveil-e2e     # Playwright frontend E2E
 
 # Lint
 npx nx lint numveil
@@ -36,7 +35,7 @@ npm run sync                   # Sync web assets to Android project
 ### Pre-commit validation
 
 ```bash
-npm run affected:lint && npm run affected:test && npm run affected:build && npm run e2e
+npm run affected:lint && npm run affected:test && npm run affected:build && npm run affected:e2e
 ```
 
 ## Architecture
