@@ -40,6 +40,11 @@ jobs:
       semgrep_rules: "auto p/security-audit p/owasp-top-ten p/ci p/nodejs p/typescript"
       npm_audit_omit_dev: true
       npm_audit_severity_threshold: "high"
+      # Re-enables the CodeQL analysis this repo last ran in Nov 2024. Its four
+      # js/insecure-randomness alerts were fixed in code long ago, but code
+      # scanning can only close an alert that a later CodeQL run stops
+      # reporting - so they need the analysis back to resolve.
+      codeql_languages: '["javascript-typescript"]'
 
   # Download artifacts from latest CI build
   # Note: Reuses artifacts from the main CI workflow instead of rebuilding
