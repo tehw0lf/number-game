@@ -45,6 +45,11 @@ jobs:
       # scanning can only close an alert that a later CodeQL run stops
       # reporting - so they need the analysis back to resolve.
       codeql_languages: '["javascript-typescript"]'
+      # Publish under the category of the retired codeql-analysis.yml so this
+      # analysis adopts - and closes - the four stale js/insecure-randomness
+      # alerts it left behind. Code scanning only closes an alert that a later
+      # run of the same tool AND category stops reporting.
+      codeql_category: ".github/workflows/codeql-analysis.yml:analyze"
 
   # Download artifacts from latest CI build
   # Note: Reuses artifacts from the main CI workflow instead of rebuilding
